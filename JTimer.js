@@ -1,5 +1,5 @@
 /**************************************************** 
-version            : 0.5.0.1325                           
+version            : 1.5.0.1                           
 last change date   : 12/31/2012                             
 auther             : R.Nasimi Asl   
 browsers           : independent
@@ -62,18 +62,26 @@ timers.doAction = function (action) {
 };
 
 timers.doActions = function () {
+    //if (timers.actions == new Array())
+    timers.enable = false;
 
-    if (timers.actions == new Array())
-        timers.enable = false;
+    for (k in timers.actions) {
+        if (timers.actions[k] != null)
+            timers.enable = true
+    }
 
-    else timers.enable = true;
+    if (!timers.enable) {
+        timers.actions = new Array();
+        return;
+    }
+
     timers.indexer++;
 
     if (timers.enable) {
         setTimeout('timers.doActions()', timers.baseInterval);
 
         for (var key in timers.actions) {
-            try { timers.doAction(timers.actions[key]); } catch (e) { }
+            try { if (timers.actions[key] != null) timers.doAction(timers.actions[key]); } catch (e) { }
         }
     }
 };
@@ -82,8 +90,8 @@ timers.remove = function (action) {
     timers.removeKey(action.key);
 };
 
-timers.removeKey = function (key) { 
-    timers.actions[key] = null; 
+timers.removeKey = function (key) {
+    timers.actions[key] = null;
 };
 
 timers.set = function (option) {
